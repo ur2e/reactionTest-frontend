@@ -19,7 +19,7 @@
     </template>
     <template v-else>
       <div class="red-screen" @click="handleClick">
-        <h2 class="centered-text" v-if="!showResult">Click Click !!</h2>
+        <h2 class="centered-text" v-if="!showResult">Click !!</h2>
         <p class="centered-text larger-text" v-if="showResult && reactionTime !== 'You lose'">Your reaction time: {{ reactionTime.toFixed(2) }} ms</p>
         <p class="centered-text smaller-text" v-if="showResult">다시 시작하려면 클릭하세요</p>
       </div>
@@ -72,17 +72,34 @@ export default {
       if (this.isGreen && !this.showResult) {
         this.loseClicked = true;
         this.showResult = true;
-        this.reactionTime = "You lose";
+        this.reactionTime = "Try Again";
       } else if (!this.isGreen && !this.showResult) {
         const currentTime = performance.now();
         this.reactionTime = currentTime - this.startTime;
         this.showResult = true;
+        this.axios.post('/click', {
+          nickname: generateRandomString(10),
+          speed: Number(this.reactionTime.toFixed(2))
+        }).then(function(response) {
+          console.log(response)
+        })
       } else if(this.showResult) {
         this.resetTest();
       }
     }
   }
 };
+
+const generateRandomString = (num) => {
+    const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < num; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
 </script>
 
 <style scoped>
