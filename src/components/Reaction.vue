@@ -56,7 +56,7 @@ export default {
             });
           });
         }
-      }, Math.floor(Math.random() * 15000));
+      }, Math.floor(Math.random() * 3000) + 1000);
     },
 
     resetTest() {
